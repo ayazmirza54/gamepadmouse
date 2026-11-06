@@ -1,4 +1,5 @@
 // Renders promo.html to an MP4: node render.js [out.mp4] [fps]
+// 9:16 version: PORTRAIT=1 node render.js gamepadmouse-promo-9x16.mp4
 // Each frame is drawn by window.seek(t), so the output is deterministic.
 const { chromium } = require('playwright');
 const { spawn } = require('child_process');
@@ -6,12 +7,13 @@ const path = require('path');
 
 const out = process.argv[2] || path.join(__dirname, 'gamepadmouse-promo.mp4');
 const fps = Number(process.argv[3] || 30);
-const stills = process.env.STILLS; // e.g. "1,5,9" -> write PNGs instead of video
+const stills = process.env.STILLS;
+const portrait = !!process.env.PORTRAIT; // 9:16 version // e.g. "1,5,9" -> write PNGs instead of video
 
 (async () => {
   const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
-  await page.goto('file://' + path.join(__dirname, 'promo.html'));
+  const page = await browser.newPage({ viewport: portrait ? { width: 1080, height: 1920 } : { width: 1920, height: 1080 } });
+  await page.goto('file://' + path.join(__dirname, 'promo.html') + (portrait ? '?portrait' : ''));
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(300);
 
