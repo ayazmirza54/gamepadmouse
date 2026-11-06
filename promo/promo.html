@@ -1,0 +1,386 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GamepadMouse Promo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#0f1014; --bg2:#16181d; --surface:#1c1e23; --ink:#eceae6; --muted:#9a9ca3; --line:#33363d;
+  --body:#2b2e35; --body-hi:#3b3f48; --part:#4d515b;
+  --accent:#ff7a3d; --accent-soft:#3a2216; --led:#74c0fc; --ok:#69db7c;
+  --display:"Chakra Petch","Inter",sans-serif; --text:"Barlow","Inter",sans-serif; --mono:"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--text)}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;
+  background:radial-gradient(1200px 700px at 70% 30%, #1b1d24 0%, var(--bg) 70%)}
+#grid{position:absolute;inset:-80px;background-image:
+  linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:80px 80px}
+.abs{position:absolute}
+.display{font-family:var(--display);font-weight:700;letter-spacing:.01em}
+.word{display:inline-block;will-change:transform,opacity}
+
+/* hook */
+#hook{left:0;right:0;top:390px;text-align:center;font-size:92px;line-height:1.1}
+#hook .accent{color:var(--accent)}
+
+/* title */
+#title{left:0;right:0;top:640px;text-align:center}
+#logo{font-size:132px;line-height:1}
+#logo .m{color:var(--accent)}
+#tagline{margin-top:22px;font-size:38px;color:var(--muted);font-weight:500}
+.chip{display:inline-block;font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+
+/* gamepad */
+#pad{left:0;top:0;width:520px;height:338px;transform-origin:0 0}
+#pad svg{width:100%;height:100%;overflow:visible}
+
+/* step captions */
+.step{left:80px;top:180px;width:400px}
+.step .num{font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:.18em;color:var(--accent)}
+.step h2{font-family:var(--display);font-weight:700;font-size:58px;line-height:1.05;margin:14px 0 18px}
+.step p{font-size:28px;line-height:1.35;color:var(--muted);margin:0}
+
+/* agent window */
+#win{left:540px;top:120px;width:1300px;height:840px;background:var(--surface);border:1px solid var(--line);border-radius:22px;
+  box-shadow:0 40px 120px rgba(0,0,0,.55);overflow:hidden}
+#win .bar{height:58px;display:flex;align-items:center;gap:10px;padding:0 22px;border-bottom:1px solid var(--line);background:#191b20}
+#win .bar i{width:14px;height:14px;border-radius:50%;background:#3a3d45;display:block}
+#win .bar span{margin-left:16px;font-family:var(--display);font-weight:600;font-size:22px;color:var(--muted);letter-spacing:.04em}
+#chat{position:absolute;left:40px;right:40px;top:90px;bottom:150px}
+.bubble{position:absolute;right:0;max-width:820px;background:var(--accent-soft);border:1px solid #5a321d;color:var(--ink);
+  font-size:30px;padding:18px 26px;border-radius:18px 18px 4px 18px}
+#reply{position:absolute;left:0;right:0;top:140px;font-family:var(--mono);font-size:25px;line-height:1.75}
+#reply div{white-space:pre;opacity:0}
+#reply .add{color:var(--ok)}
+#reply .meta{color:var(--muted)}
+#reply .pass{color:var(--ok);font-weight:bold}
+#input{position:absolute;left:40px;right:40px;bottom:40px;height:84px;border:2px solid var(--line);border-radius:16px;
+  background:#16181d;display:flex;align-items:center;padding:0 28px;font-size:30px;color:var(--ink)}
+#input .ph{color:#5d6068}
+#caret{display:inline-block;width:3px;height:36px;background:var(--accent);margin-left:3px;vertical-align:middle}
+#send{position:absolute;right:16px;top:14px;width:52px;height:52px;border-radius:12px;background:var(--line);display:flex;align-items:center;justify-content:center}
+
+/* mic pill */
+#mic{left:0;top:0;height:76px;padding:0 26px 0 18px;border-radius:40px;background:#121317;border:1px solid var(--line);
+  display:flex;align-items:center;gap:16px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+#mic .dot{width:44px;height:44px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center}
+#mic .lbl{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+#wave{display:flex;align-items:center;gap:5px;height:44px}
+#wave b{display:block;width:6px;border-radius:3px;background:var(--led)}
+
+/* cursor */
+#cursor{left:0;top:0;width:44px;height:44px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.ripple{left:0;top:0;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:4px solid var(--accent)}
+
+/* pipeline */
+#pipe{left:0;top:0;width:1920px;height:1080px}
+.node{position:absolute;width:300px;text-align:center}
+.node .ic{width:150px;height:150px;margin:0 auto;border-radius:36px;background:var(--surface);border:2px solid var(--line);display:flex;align-items:center;justify-content:center}
+.node .ic svg{width:80px;height:80px}
+.node h3{font-family:var(--display);font-weight:700;font-size:34px;margin:26px 0 6px}
+.node p{margin:0;font-size:24px;color:var(--muted)}
+#pipeTitle{left:0;right:0;top:200px;text-align:center;font-size:64px}
+
+/* outro */
+#slogan{left:0;right:0;top:330px;text-align:center;font-size:120px;line-height:1.1}
+#cta{left:0;right:0;top:640px;text-align:center}
+#cta .btn{display:inline-flex;align-items:center;gap:18px;background:var(--accent);color:#1a0d05;font-family:var(--display);font-weight:700;font-size:40px;padding:22px 44px;border-radius:18px}
+#cta .url{margin-top:30px;font-size:32px;color:var(--muted);font-family:var(--mono)}
+#fade{inset:0;background:#000;opacity:0}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="grid" class="abs"></div>
+
+  <!-- 1. Hook -->
+  <div id="hook" class="abs display">
+    <div><span class="word">What</span> <span class="word">if</span> <span class="word">your</span> <span class="word accent">gamepad</span></div>
+    <div><span class="word">could</span> <span class="word">run</span> <span class="word">your</span> <span class="word accent">coding</span> <span class="word accent">agents?</span></div>
+  </div>
+
+  <!-- 2. Title -->
+  <div id="title" class="abs">
+    <div id="logo" class="display"></div>
+    <div id="tagline">Your controller. Your cursor. Your coding agents.</div>
+  </div>
+
+  <!-- 3–5. Demo -->
+  <div id="win" class="abs">
+    <div class="bar"><i></i><i></i><i></i><span>Your coding agent</span></div>
+    <div id="chat">
+      <div class="bubble" id="bubble" style="opacity:0">Add input validation and tests to this endpoint.</div>
+      <div id="reply">
+        <div class="meta">› Reading src/routes/orders.ts</div>
+        <div class="add">+ const Order = z.object({ qty: z.number().int().positive() })</div>
+        <div class="add">+ if (!Order.safeParse(req.body).success) return res.status(400)</div>
+        <div class="add">+ test("rejects a negative quantity", async () =&gt; { … })</div>
+        <div class="add">+ test("accepts a valid order", async () =&gt; { … })</div>
+        <div class="pass">✓ 12 tests passed — ready for your review</div>
+      </div>
+    </div>
+    <div id="input"><span id="inText"></span><span id="caret"></span><span class="ph" id="ph">Ask your agent to build something…</span>
+      <div id="send"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M4 12h14M12 5l7 7-7 7" stroke="#eceae6" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+  </div>
+
+  <div class="step abs" id="step1"><div class="num">01 — NAVIGATE</div><h2>Your stick is the mouse</h2><p>Glide across Windows and focus any input with your controller.</p></div>
+  <div class="step abs" id="step2"><div class="num">02 — SPEAK</div><h2>Press a button. Talk.</h2><p>Pair with Hex voice dictation and say what you want built.</p></div>
+  <div class="step abs" id="step3"><div class="num">03 — DELEGATE</div><h2>Your agent builds it</h2><p>Submit the prompt and let your favourite coding agent do the work.</p></div>
+
+  <div id="mic" class="abs"><div class="dot"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="13" rx="4" fill="#1a0d05"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4" stroke="#1a0d05" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></div><div id="wave"></div><div class="lbl">Listening</div></div>
+
+  <div id="ripple" class="ripple abs"></div>
+  <svg id="cursor" class="abs" viewBox="0 0 24 24"><path d="M4 2l15 11-6.5 1.2L16.5 22l-3 1.4-4-7.8L4 20z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/></svg>
+
+  <!-- 6. Pipeline -->
+  <div id="pipe" class="abs">
+    <div id="pipeTitle" class="abs display">One controller. A whole workflow.</div>
+    <svg class="abs" width="1920" height="1080" style="left:0;top:0"><path id="pipeLine" d="M260 520 H1660" stroke="#33363d" stroke-width="6" fill="none"/><path id="pipeLineHi" d="M260 520 H1660" stroke="#ff7a3d" stroke-width="6" fill="none" stroke-linecap="round"/><circle id="pulse" r="12" fill="#ffb38a"/></svg>
+  </div>
+
+  <!-- 7. Outro -->
+  <div id="slogan" class="abs display"><span class="word">Press.</span> <span class="word">Speak.</span><br><span class="word">Delegate.</span> <span class="word" style="color:var(--accent)">Build.</span></div>
+  <div id="cta" class="abs">
+    <div class="btn"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M12 3v12M6 10l6 6 6-6M4 20h16" stroke="#1a0d05" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Download GamepadMouse for Windows</div>
+    <div class="url">github.com/ayazmirza54/gamepadmouse</div>
+  </div>
+
+  <!-- Gamepad (original illustration) -->
+  <div id="pad" class="abs">
+    <svg viewBox="0 0 400 260">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ff7a3d" stop-opacity=".35"/><stop offset="1" stop-color="#ff7a3d" stop-opacity="0"/></radialGradient>
+      </defs>
+      <ellipse id="padGlow" cx="200" cy="140" rx="230" ry="150" fill="url(#glow)"/>
+      <rect id="lb" x="62" y="34" width="86" height="24" rx="10" fill="#3b3f48"/>
+      <rect id="rb" x="252" y="34" width="86" height="24" rx="10" fill="#3b3f48"/>
+      <path d="M80 56 C125 38 275 38 320 56 C372 68 396 150 391 200 C386 246 346 252 320 222 L290 186 L110 186 L80 222 C54 252 14 246 9 200 C4 150 28 68 80 56Z" fill="#2b2e35" stroke="#4d515b" stroke-width="2.5"/>
+      <circle cx="200" cy="82" r="7" fill="#74c0fc" id="led"/>
+      <!-- left stick -->
+      <circle cx="122" cy="106" r="32" fill="#1c1e23" stroke="#4d515b" stroke-width="2"/>
+      <g id="lstick"><circle cx="122" cy="106" r="22" fill="#4d515b" stroke="#62666f" stroke-width="2"/><circle cx="122" cy="106" r="12" fill="#3b3f48"/></g>
+      <!-- right stick -->
+      <circle cx="250" cy="152" r="28" fill="#1c1e23" stroke="#4d515b" stroke-width="2"/>
+      <circle cx="250" cy="152" r="19" fill="#4d515b" stroke="#62666f" stroke-width="2"/>
+      <!-- dpad -->
+      <path d="M144 140h20v-18h20v18h18v20h-18v18h-20v-18h-20z" transform="translate(-8 0)" fill="#4d515b"/>
+      <!-- face buttons -->
+      <circle id="bY" cx="288" cy="82" r="13" fill="#4d515b"/>
+      <circle id="bB" cx="312" cy="106" r="13" fill="#4d515b"/>
+      <circle id="bA" cx="288" cy="130" r="13" fill="#4d515b"/>
+      <circle id="bX" cx="264" cy="106" r="13" fill="#4d515b"/>
+      <text x="288" y="135" text-anchor="middle" font-family="Chakra Petch,Inter,sans-serif" font-weight="700" font-size="13" fill="#eceae6" id="tA">A</text>
+    </svg>
+  </div>
+
+  <div id="fade" class="abs"></div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const clamp = (x,a=0,b=1) => Math.min(b,Math.max(a,x));
+const lerp = (a,b,t) => a+(b-a)*t;
+const eo = t => 1-Math.pow(1-t,3);                 // ease out cubic
+const eio = t => t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+const eback = t => { const c1=1.70158,c3=c1+1; return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2); };
+const seg = (t,a,b) => clamp((t-a)/(b-a));
+// in/out envelope: fade in over [a,a+d], out over [b-d,b]
+const env = (t,a,b,d=.4) => Math.min(eo(seg(t,a,a+d)), 1-eio(seg(t,b-d,b)));
+const show = (el,o) => { el.style.opacity = o; el.style.visibility = o<=0.001 ? 'hidden':'visible'; };
+
+// build logo letters
+const logoTxt = 'GamepadMouse';
+$('#logo').innerHTML = [...logoTxt].map((c,i)=>`<span class="word${i>=7?' m':''}">${c}</span>`).join('');
+// waveform bars
+$('#wave').innerHTML = Array.from({length:22},()=>'<b></b>').join('');
+
+const PROMPT = 'Add input validation and tests to this endpoint.';
+const DURATION = 30;
+
+// cursor path (cubic bezier), stage coords
+const P0=[1500,300], P1=[1150,180], P2=[700,520], P3=[860,872];
+function bez(t){ const u=1-t; return [0,1].map(i=>u*u*u*P0[i]+3*u*u*t*P1[i]+3*u*t*t*P2[i]+t*t*t*P3[i]); }
+
+function setPad(x,y,s){ $('#pad').style.transform = `translate(${x}px,${y}px) scale(${s})`; }
+
+function frame(t){
+  // background drift
+  $('#grid').style.transform = `translate(${-(t*12)%80}px,${-(t*6)%80}px)`;
+
+  // ---------- 1. Hook (0 – 3.3)
+  const hookOut = 1-eio(seg(t,2.8,3.3));
+  document.querySelectorAll('#hook .word').forEach((w,i)=>{
+    const p = eo(seg(t,0.15+i*0.16,0.65+i*0.16));
+    w.style.opacity = p*hookOut;
+    w.style.transform = `translateY(${(1-p)*60 - (1-hookOut)*40}px)`;
+    w.style.filter = `blur(${(1-p)*10}px)`;
+  });
+  show($('#hook'), t<3.4?1:0);
+
+  // ---------- Gamepad choreography
+  // enters 3.0–3.9 centred above title; moves to corner 6.4–7.2; hides in pipeline 20.6–21.1
+  const centre = {x:700, y:240, s:1};
+  const corner = {x:70, y:640, s:0.78};
+  const pin = eback(seg(t,3.0,3.9));
+  const mv = eio(seg(t,6.4,7.3));
+  let px = lerp(centre.x, corner.x, mv), py = lerp(centre.y, corner.y, mv), ps = lerp(centre.s, corner.s, mv);
+  ps *= lerp(0.6,1,pin);
+  py += (1-pin)*80;
+  // idle float
+  py += Math.sin(t*2.2)*6*(1-mv*0.6);
+  setPad(px, py, ps);
+  const padOut = 1-eio(seg(t,20.6,21.1));
+  show($('#pad'), clamp(pin*2)*padOut);
+  $('#padGlow').style.opacity = 0.5+0.5*Math.sin(t*3);
+  $('#led').style.opacity = 0.6+0.4*Math.sin(t*5);
+
+  // stick tilt while cursor moves (7.8 – 10.6)
+  const cp = seg(t,7.8,10.6);
+  let sx=0, sy=0;
+  if (cp>0 && cp<1){ const a=bez(clamp(cp-0.02)), b=bez(clamp(cp+0.02)); const dx=b[0]-a[0], dy=b[1]-a[1]; const L=Math.hypot(dx,dy)||1; const k=Math.sin(Math.PI*cp); sx=dx/L*10*k; sy=dy/L*10*k; }
+  $('#lstick').setAttribute('transform', `translate(${sx} ${sy})`);
+  // button presses: A at 10.8 (click) and 16.3 (send); RB at 12.2 (dictation)
+  const press = (t0) => Math.max(0, 1-Math.abs(t-t0)/0.25);
+  const aP = Math.max(press(10.85), press(16.35));
+  $('#bA').setAttribute('fill', aP>0 ? `rgb(${lerp(77,255,aP)|0},${lerp(81,122,aP)|0},${lerp(91,61,aP)|0})` : '#4d515b');
+  $('#bA').setAttribute('r', 13 - aP*2);
+  const rbOn = t>12.1 && t<15.9 ? 1 : 0;
+  $('#rb').setAttribute('fill', rbOn ? '#ff7a3d' : '#3b3f48');
+
+  // ---------- 2. Title (3.4 – 6.6)
+  const titleOut = 1-eio(seg(t,6.1,6.6));
+  document.querySelectorAll('#logo .word').forEach((w,i)=>{
+    const p = eback(seg(t,3.6+i*0.05,4.1+i*0.05));
+    w.style.opacity = clamp(p)*titleOut;
+    w.style.transform = `translateY(${(1-p)*70}px) scale(${lerp(.7,1,clamp(p))})`;
+  });
+  const tg = eo(seg(t,4.5,5.1));
+  $('#tagline').style.opacity = tg*titleOut;
+  $('#tagline').style.transform = `translateY(${(1-tg)*24}px)`;
+  show($('#title'), t>3.4 && t<6.7 ? 1:0);
+
+  // ---------- Window (6.9 – 20.8)
+  const wIn = eo(seg(t,6.9,7.7)), wOut = eio(seg(t,20.3,20.9));
+  $('#win').style.opacity = wIn*(1-wOut);
+  $('#win').style.transform = `translateY(${(1-wIn)*80}px) scale(${lerp(.96,1,wIn)*lerp(1,.94,wOut)})`;
+  show($('#win'), t>6.8 && t<21 ? wIn*(1-wOut) : 0);
+
+  // input focus (after click 10.85)
+  const focus = eo(seg(t,10.85,11.2)) * (1-eio(seg(t,16.35,16.6)));
+  $('#input').style.borderColor = focus>0 ? `rgba(255,122,61,${0.25+0.75*focus})` : '';
+  $('#input').style.boxShadow = `0 0 0 ${6*focus}px rgba(255,122,61,.18)`;
+
+  // typing 12.8 – 15.8
+  const n = Math.round(PROMPT.length * seg(t,12.8,15.8));
+  const sent = t>=16.4;
+  $('#inText').textContent = sent ? '' : PROMPT.slice(0,n);
+  $('#ph').style.display = (n>0 && !sent) ? 'none' : 'inline';
+  $('#ph').style.marginLeft = '8px';
+  $('#caret').style.opacity = (focus>0 && Math.floor(t*2.4)%2===0) || (n>0 && n<PROMPT.length) ? 1 : 0;
+  $('#send').style.background = (n===PROMPT.length && !sent) ? '#ff7a3d' : '#33363d';
+
+  // bubble flies up 16.4 – 17.0
+  const bp = eo(seg(t,16.4,17.0));
+  $('#bubble').style.opacity = bp;
+  $('#bubble').style.top = `${lerp(560,0,bp)}px`;
+  $('#bubble').style.transform = `scale(${lerp(.9,1,bp)})`;
+
+  // agent reply lines 17.3 – 19.8
+  document.querySelectorAll('#reply div').forEach((d,i)=>{
+    const p = eo(seg(t,17.3+i*0.45,17.7+i*0.45));
+    d.style.opacity = p; d.style.transform = `translateX(${(1-p)*-30}px)`;
+  });
+
+  // ---------- Step captions
+  [['#step1',7.5,12.0],['#step2',12.0,16.6],['#step3',16.6,20.8]].forEach(([id,a,b])=>{
+    const e = env(t,a,b,.45), el=$(id);
+    show(el, e);
+    el.style.transform = `translateY(${(1-e)*30}px)`;
+  });
+
+  // ---------- Cursor (7.5 – 16.6)
+  const cIn = env(t,7.5,12.6,.4);
+  const [cx,cy] = bez(eio(cp));
+  const clickDip = press(10.85);
+  $('#cursor').style.transform = `translate(${cx}px,${cy}px) scale(${1-clickDip*0.18})`;
+  show($('#cursor'), cIn);
+  const rp = seg(t,10.85,11.45);
+  show($('#ripple'), rp>0 && rp<1 ? 1-rp : 0);
+  $('#ripple').style.transform = `translate(${cx+6}px,${cy+6}px) scale(${lerp(.2,1.4,eo(rp))})`;
+
+  // ---------- Mic pill (12.2 – 16.0)
+  const mIn = env(t,12.2,16.1,.35);
+  show($('#mic'), mIn);
+  $('#mic').style.transform = `translate(1180px,${lerp(800,735,eo(mIn))}px) scale(${lerp(.85,1,mIn)})`;
+  document.querySelectorAll('#wave b').forEach((b,i)=>{
+    const talking = seg(t,12.6,15.9)>0 && seg(t,12.6,15.9)<1;
+    const h = talking ? 8 + 34*Math.abs(Math.sin(t*9 + i*0.9) * Math.sin(t*3.3 + i*0.37)) : 6;
+    b.style.height = h+'px';
+  });
+
+  // ---------- 6. Pipeline (21.0 – 26.0)
+  const pOn = env(t,21.0,26.0,.45);
+  show($('#pipe'), pOn);
+  const pt = eo(seg(t,21.1,21.7));
+  $('#pipeTitle').style.opacity = pt; $('#pipeTitle').style.transform = `translateY(${(1-pt)*30}px)`;
+  const line = eio(seg(t,21.6,23.6));
+  const L = 1400;
+  $('#pipeLineHi').setAttribute('stroke-dasharray', `${L*line} ${L}`);
+  const pu = (t-23.6)/1.6;
+  const pulseX = 260 + L*((pu%1+1)%1);
+  $('#pulse').setAttribute('cx', t>23.6 ? pulseX : 260); $('#pulse').setAttribute('cy', 520);
+  $('#pulse').style.opacity = t>23.6 ? 1 : 0;
+  document.querySelectorAll('.node').forEach((nd,i)=>{
+    const p = eback(seg(t,21.6+i*0.45,22.2+i*0.45));
+    nd.style.opacity = clamp(p);
+    nd.style.transform = `translateY(${(1-p)*50}px) scale(${lerp(.8,1,clamp(p))})`;
+    const near = t>23.6 ? Math.max(0,1-Math.abs(pulseX-(260+i*350))/90) : 0;
+    nd.querySelector('.ic').style.borderColor = near>0 ? `rgba(255,122,61,${0.3+0.7*near})` : '';
+    nd.querySelector('.ic').style.boxShadow = `0 0 ${40*near}px rgba(255,122,61,${.45*near})`;
+  });
+
+  // ---------- 7. Outro (26.0 – 30)
+  const sOut = 1-eio(seg(t,27.9,28.3));
+  document.querySelectorAll('#slogan .word').forEach((w,i)=>{
+    const p = eback(seg(t,26.0+i*0.32,26.5+i*0.32));
+    w.style.opacity = clamp(p)*sOut;
+    w.style.transform = `translateY(${(1-p)*60}px) scale(${lerp(.8,1,clamp(p))})`;
+  });
+  show($('#slogan'), t>25.9 && t<28.4 ? 1 : 0);
+  // after slogan, CTA appears with mini logo moved up
+  const ct = eo(seg(t,28.2,28.8));
+  show($('#cta'), ct);
+  $('#cta').style.transform = `translateY(${(1-ct)*40 - 120}px)`;
+
+  // final fade to black for stock-footage handoff
+  $('#fade').style.opacity = eio(seg(t,29.4,30));
+}
+
+// pipeline nodes
+const icons = {
+  pad:'<svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 0 1 3.9 4.8l-.9 4.4a2.4 2.4 0 0 1-4.2 1L15 16H9l-1.8 2.2a2.4 2.4 0 0 1-4.2-1l-.9-4.4A4 4 0 0 1 6 8z" fill="none" stroke="#ff7a3d" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 11v4M5 13h4" stroke="#ff7a3d" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="12" r="1.1" fill="#ff7a3d"/><circle cx="18" cy="14.2" r="1.1" fill="#ff7a3d"/></svg>',
+  mouse:'<svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="6" fill="none" stroke="#ff7a3d" stroke-width="1.8"/><path d="M12 3v6M6 9h12" stroke="#ff7a3d" stroke-width="1.8"/></svg>',
+  mic:'<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="#ff7a3d" stroke-width="1.8"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" stroke="#ff7a3d" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>',
+  bot:'<svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3" fill="none" stroke="#ff7a3d" stroke-width="1.8"/><path d="M12 7V4M9 12v1.5M15 12v1.5M9.5 16h5" stroke="#ff7a3d" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="3.5" r="1" fill="#ff7a3d"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#ff7a3d" stroke-width="1.8"/><path d="M8 12.5l2.7 2.7L16.5 9.5" stroke="#ff7a3d" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+[['pad','Controller','Any gamepad'],['mouse','GamepadMouse','Move · click · scroll'],['mic','Hex','Voice → text'],['bot','Coding agent','Plans & implements'],['check','You','Review & ship']]
+.forEach(([ic,h,p],i)=>{
+  const d=document.createElement('div'); d.className='node';
+  d.style.left=(260+i*350-150)+'px'; d.style.top='445px';
+  d.innerHTML=`<div class="ic">${icons[ic]}</div><h3>${h}</h3><p>${p}</p>`;
+  $('#pipe').appendChild(d);
+});
+
+window.DURATION = DURATION;
+window.seek = t => frame(t);
+frame(0);
+// live preview when opened directly (?play)
+if (location.search.includes('play')){ const s=performance.now(); const loop=()=>{ frame(((performance.now()-s)/1000)%DURATION); requestAnimationFrame(loop); }; loop(); }
+</script>
+</body>
+</html>
