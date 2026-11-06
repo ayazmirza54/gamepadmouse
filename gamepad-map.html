@@ -1,0 +1,239 @@
+<title>GamepadMouse Button Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: one wide diagram of the real EvoFox layout with leader-line callouts, then the "hold Select" layer as a key grid, then pad basics */
+:root{
+  --bg:#f3f2f0; --surface:#ffffff; --ink:#1b1d22; --muted:#61656e; --line:#c9c6c1;
+  --body:#2a2d34; --body-hi:#3a3e47; --part:#50545e; --part-ink:#f3f2f0; --print:#9da1ab;
+  --accent:#d9480f; --accent-soft:#fde6d8; --led:#4dabf7;
+  --display:"Chakra Petch", "Bahnschrift", "Segoe UI", sans-serif;
+  --text:"Barlow", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#131418; --surface:#1c1e23; --ink:#eceae6; --muted:#9a9ca3; --line:#3a3c43;
+  --body:#2b2e35; --body-hi:#3b3f48; --part:#4d515b; --part-ink:#eceae6; --print:#868a94;
+  --accent:#ff7a3d; --accent-soft:#3a2216; --led:#74c0fc; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#131418; --surface:#1c1e23; --ink:#eceae6; --muted:#9a9ca3; --line:#3a3c43;
+  --body:#2b2e35; --body-hi:#3b3f48; --part:#4d515b; --part-ink:#eceae6; --print:#868a94;
+  --accent:#ff7a3d; --accent-soft:#3a2216; --led:#74c0fc; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--text);font-size:16px;line-height:1.5}
+.wrap{max-width:1140px;margin:0 auto;padding-block:28px 48px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex;flex-direction:column;gap:30px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.eyebrow{font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.5vw,42px);line-height:1.1;margin:4px 0 0;text-wrap:balance}
+.model{font-size:14px;color:var(--muted)}
+h2{font-family:var(--display);font-weight:600;font-size:20px;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0;font-size:15px}
+section{display:grid;gap:14px}
+
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:780px;height:auto}
+svg text{font-family:var(--text)}
+.btn-name{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.04em;fill:var(--accent)}
+.act{font-size:14.5px;fill:var(--ink)}
+.hint{font-size:12.5px;fill:var(--muted)}
+.print{font-family:var(--display);font-size:8px;font-weight:600;letter-spacing:.08em;fill:var(--print)}
+.lead{stroke:var(--muted);stroke-width:1.2;fill:none}
+.dot{fill:var(--muted)}
+.sym{color:var(--part-ink)}
+
+.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.key{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;min-width:0}
+.combo{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.cap{font-family:var(--display);font-weight:700;font-size:12.5px;min-width:30px;height:30px;padding:0 7px;border-radius:7px;
+  display:inline-flex;align-items:center;justify-content:center;gap:3px;background:var(--body);color:var(--part-ink);border-bottom:3px solid var(--part)}
+.cap.round{border-radius:50%;width:30px;padding:0}
+.cap svg{width:16px;height:16px}
+.plus{color:var(--muted);font-size:13px}
+.what{font-weight:500;min-width:0}
+
+.basics{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.note{border-top:2px solid var(--accent);padding-top:10px;min-width:0}
+.note h3{font-family:var(--display);font-size:15px;font-weight:600;margin:0 0 4px;letter-spacing:.02em}
+.note p{margin:0;color:var(--muted);font-size:15px}
+.note p + p{margin-top:6px}
+kbd{font-family:var(--display);font-size:13px;font-weight:600;background:var(--accent-soft);color:var(--ink);padding:1px 6px;border-radius:4px}
+</style>
+
+<!-- face-button symbols as printed on the pad -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="s-a" viewBox="0 0 20 20"><polyline points="5,15 10,5 15,15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="s-b" viewBox="0 0 20 20"><rect x="5" y="5" width="10" height="10" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><line x1="5" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="s-x" viewBox="0 0 20 20"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="s-y" viewBox="0 0 20 20"><path d="M5.5 5l4.5 5 4.5-5M10 10v6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">GamepadMouse</div>
+      <h1>Controller button map</h1>
+    </div>
+    <div class="model">EvoFox Elite Ops Wireless · STK-WL2021PUP · X-input mode<br>Default controls. Change any of them in the app's Controls tab.</div>
+  </header>
+
+  <div class="diagram" role="img" aria-label="EvoFox Elite Ops diagram showing what each button does">
+    <svg viewBox="0 0 1120 660" xmlns="http://www.w3.org/2000/svg">
+     <g transform="translate(60,80)">
+      <!-- shoulders and triggers -->
+      <rect x="300" y="104" width="96" height="30" rx="12" fill="var(--part)"/>
+      <rect x="604" y="104" width="96" height="30" rx="12" fill="var(--part)"/>
+      <rect x="292" y="138" width="114" height="22" rx="9" fill="var(--body-hi)"/>
+      <rect x="594" y="138" width="114" height="22" rx="9" fill="var(--body-hi)"/>
+      <text x="348" y="124" text-anchor="middle" class="btn-name" style="fill:var(--part-ink)" font-size="13">LT</text>
+      <text x="652" y="124" text-anchor="middle" class="btn-name" style="fill:var(--part-ink)" font-size="13">RT</text>
+      <text x="349" y="154" text-anchor="middle" class="btn-name" style="fill:var(--part-ink)" font-size="12">LB</text>
+      <text x="651" y="154" text-anchor="middle" class="btn-name" style="fill:var(--part-ink)" font-size="12">RB</text>
+
+      <!-- body -->
+      <path d="M360 158 Q500 140 640 158 Q705 166 724 216 L774 382 Q792 452 742 462 Q700 470 668 420 L640 378 Q500 366 360 378 L332 420 Q300 470 258 462 Q208 452 226 382 L276 216 Q295 166 360 158 Z" fill="var(--body)"/>
+      <!-- USB-C port -->
+      <rect x="486" y="146" width="28" height="6" rx="3" fill="var(--part)"/>
+
+      <!-- left stick (top left) -->
+      <circle cx="365" cy="235" r="36" fill="var(--part)"/>
+      <circle cx="365" cy="235" r="24" fill="var(--body-hi)"/>
+      <!-- d-pad (bottom left) -->
+      <path d="M408 285h24v18h18v24h-18v18h-24v-18h-18v-24h18z" fill="var(--part)"/>
+      <!-- right stick (bottom right) -->
+      <circle cx="580" cy="315" r="34" fill="var(--part)"/>
+      <circle cx="580" cy="315" r="22" fill="var(--body-hi)"/>
+
+      <!-- centre cluster: TURBO  SELECT  logo  START  CLEAR, MODE below, LEDs below that -->
+      <circle cx="428" cy="190" r="8" fill="var(--part)"/>
+      <text x="428" y="208" text-anchor="middle" class="print">TURBO</text>
+      <circle cx="460" cy="214" r="8" fill="var(--part)"/>
+      <text x="460" y="232" text-anchor="middle" class="print">SELECT</text>
+      <path d="M500 176l5 9h9l-6 7 3 10-11-5-11 5 3-10-6-7h9z" fill="var(--body-hi)"/>
+      <circle cx="540" cy="214" r="8" fill="var(--part)"/>
+      <text x="540" y="232" text-anchor="middle" class="print">START</text>
+      <circle cx="572" cy="190" r="8" fill="var(--part)"/>
+      <text x="572" y="208" text-anchor="middle" class="print">CLEAR</text>
+      <circle cx="500" cy="246" r="11" fill="var(--accent)"/>
+      <text x="500" y="268" text-anchor="middle" class="print">MODE</text>
+      <rect x="494" y="280" width="12" height="3" rx="1.5" fill="var(--led)"/>
+      <rect x="494" y="288" width="12" height="3" rx="1.5" fill="var(--print)"/>
+      <rect x="494" y="296" width="12" height="3" rx="1.5" fill="var(--print)"/>
+      <rect x="494" y="304" width="12" height="3" rx="1.5" fill="var(--print)"/>
+
+      <!-- face buttons: Y top, ✕ left, ⊟ right, Λ bottom -->
+      <circle cx="640" cy="200" r="15" fill="var(--part)"/>
+      <circle cx="605" cy="235" r="15" fill="var(--part)"/>
+      <circle cx="675" cy="235" r="15" fill="var(--part)"/>
+      <circle cx="640" cy="270" r="15" fill="var(--part)"/>
+      <use href="#s-y" x="630" y="190" width="20" height="20" class="sym"/>
+      <use href="#s-x" x="595" y="225" width="20" height="20" class="sym"/>
+      <use href="#s-b" x="665" y="225" width="20" height="20" class="sym"/>
+      <use href="#s-a" x="630" y="260" width="20" height="20" class="sym"/>
+
+      <!-- LEFT callouts -->
+      <polyline class="lead" points="300,119 250,82 232,82"/><circle class="dot" cx="300" cy="119" r="3"/>
+      <text x="226" y="78" text-anchor="end"><tspan class="btn-name">LT · hold</tspan><tspan x="226" dy="19" class="act">Slow, precise cursor</tspan><tspan x="226" dy="18" class="hint">LT + RT together: OpenWhispr</tspan></text>
+
+      <polyline class="lead" points="292,149 250,150 232,150"/><circle class="dot" cx="292" cy="149" r="3"/>
+      <text x="226" y="146" text-anchor="end"><tspan class="btn-name">LB · tap</tspan><tspan x="226" dy="19" class="act">Browser back</tspan><tspan x="226" dy="18" class="hint">LB + RB together: voice typing</tspan></text>
+
+      <polyline class="lead" points="329,235 232,235"/><circle class="dot" cx="329" cy="235" r="3"/>
+      <text x="226" y="222" text-anchor="end"><tspan class="btn-name">L analog</tspan><tspan x="226" dy="19" class="act">Move the cursor</tspan><tspan x="226" dy="18" class="hint">Press it in (L3): middle click</tspan></text>
+
+      <polyline class="lead" points="390,330 250,330 232,330"/><circle class="dot" cx="390" cy="330" r="3"/>
+      <text x="226" y="318" text-anchor="end"><tspan class="btn-name">D-pad</tspan><tspan x="226" dy="19" class="act">Arrow keys</tspan><tspan x="226" dy="18" class="hint">Hold to repeat</tspan></text>
+
+      <!-- RIGHT callouts -->
+      <polyline class="lead" points="700,119 750,82 768,82"/><circle class="dot" cx="700" cy="119" r="3"/>
+      <text x="774" y="78"><tspan class="btn-name">RT · hold</tspan><tspan x="774" dy="19" class="act">Fast cursor</tspan><tspan x="774" dy="18" class="hint">LT + RT together: OpenWhispr</tspan></text>
+
+      <polyline class="lead" points="708,149 750,140 768,140"/><circle class="dot" cx="708" cy="149" r="3"/>
+      <text x="774" y="136"><tspan class="btn-name">RB · tap</tspan><tspan x="774" dy="19" class="act">Browser forward</tspan><tspan x="774" dy="18" class="hint">LB + RB together: voice typing</tspan></text>
+
+      <polyline class="lead" points="605,220 605,172 740,172 768,190"/><circle class="dot" cx="605" cy="220" r="3"/>
+      <text x="774" y="194"><tspan class="btn-name">✕ · X</tspan><tspan x="774" dy="19" class="act">Enter</tspan></text>
+
+      <polyline class="lead" points="655,200 700,200 740,240 768,240"/><circle class="dot" cx="655" cy="200" r="3"/>
+      <text x="774" y="244"><tspan class="btn-name">Y</tspan><tspan x="774" dy="19" class="act">On-screen keyboard (open/close)</tspan></text>
+
+      <polyline class="lead" points="690,235 724,290 768,290"/><circle class="dot" cx="690" cy="235" r="3"/>
+      <text x="774" y="294"><tspan class="btn-name">⊟ · B</tspan><tspan x="774" dy="19" class="act">Right click</tspan></text>
+
+      <polyline class="lead" points="655,270 700,340 768,340"/><circle class="dot" cx="655" cy="270" r="3"/>
+      <text x="774" y="344"><tspan class="btn-name">Λ · A</tspan><tspan x="774" dy="19" class="act">Left click · hold to drag</tspan></text>
+
+      <polyline class="lead" points="614,315 660,400 768,400"/><circle class="dot" cx="614" cy="315" r="3"/>
+      <text x="774" y="396"><tspan class="btn-name">R analog</tspan><tspan x="774" dy="19" class="act">Scroll up, down, left, right</tspan><tspan x="774" dy="18" class="hint">Press it in (R3): Task View</tspan></text>
+
+      <!-- TOP callouts: Select, Start -->
+      <polyline class="lead" points="460,206 460,-8"/><circle class="dot" cx="460" cy="206" r="3"/>
+      <text x="452" y="-48" text-anchor="end"><tspan class="btn-name">Select</tspan><tspan x="452" dy="19" class="act">Tap: Escape</tspan><tspan x="452" dy="18" class="hint">Hold: media layer (below)</tspan></text>
+
+      <polyline class="lead" points="540,206 540,-8"/><circle class="dot" cx="540" cy="206" r="3"/>
+      <text x="548" y="-48"><tspan class="btn-name">Start</tspan><tspan x="548" dy="19" class="act">Start menu (Win key)</tspan></text>
+
+      <!-- BOTTOM callouts: Mode, LEDs -->
+      <polyline class="lead" points="491,253 470,272 470,492"/><circle class="dot" cx="491" cy="253" r="3"/>
+      <text x="480" y="510" text-anchor="end"><tspan class="btn-name">Mode</tspan><tspan x="480" dy="19" class="act">Controller mouse on / off</tspan><tspan x="480" dy="18" class="hint">Also turns the pad on and wakes it</tspan></text>
+
+      <polyline class="lead" points="508,292 522,300 522,492"/><circle class="dot" cx="508" cy="292" r="3"/>
+      <text x="532" y="510"><tspan class="btn-name">LED indicators</tspan><tspan x="532" dy="19" class="act">Slow blink while charging</tspan><tspan x="532" dy="18" class="hint">Blinking stops when fully charged</tspan></text>
+     </g>
+    </svg>
+  </div>
+
+  <section>
+    <div>
+      <h2>Press together</h2>
+      <p class="sub">Press both at the same time. Tapping LB or RB alone still goes back or forward, and LT or RT alone still changes the cursor speed.</p>
+    </div>
+    <div class="keys">
+      <div class="key"><div class="combo"><span class="cap">LB</span><span class="plus">+</span><span class="cap">RB</span></div><span class="what">Voice typing (Win+H)</span></div>
+      <div class="key"><div class="combo"><span class="cap">LT</span><span class="plus">+</span><span class="cap">RT</span></div><span class="what">OpenWhispr dictation (holds Ctrl+Win)</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div>
+      <h2>Hold Select for the media layer</h2>
+      <p class="sub">Keep Select held down, then press the second button.</p>
+    </div>
+    <div class="keys">
+      <div class="key"><div class="combo"><span class="cap">Select</span><span class="plus">+</span><span class="cap">↑</span><span class="cap">↓</span></div><span class="what">Volume up / down</span></div>
+      <div class="key"><div class="combo"><span class="cap">Select</span><span class="plus">+</span><span class="cap">←</span><span class="cap">→</span></div><span class="what">Previous / next track</span></div>
+      <div class="key"><div class="combo"><span class="cap">Select</span><span class="plus">+</span><span class="cap round" title="A"><svg><use href="#s-a"/></svg></span></div><span class="what">Play / pause</span></div>
+      <div class="key"><div class="combo"><span class="cap">Select</span><span class="plus">+</span><span class="cap round" title="B"><svg><use href="#s-b"/></svg></span></div><span class="what">Mute</span></div>
+      <div class="key"><div class="combo"><span class="cap">Select</span><span class="plus">+</span><span class="cap round" title="X"><svg><use href="#s-x"/></svg></span></div><span class="what">Backspace</span></div>
+      <div class="key"><div class="combo"><span class="cap">Select</span><span class="plus">+</span><span class="cap round" title="Y"><svg><use href="#s-y"/></svg></span></div><span class="what">Show desktop</span></div>
+      <div class="key"><div class="combo"><span class="cap">Select</span><span class="plus">+</span><span class="cap">LB</span><span class="cap">RB</span></div><span class="what">Switch apps (Alt+Tab)</span></div>
+      <div class="key"><div class="combo"><span class="cap">Select</span><span class="plus">+</span><span class="cap">Start</span></div><span class="what">Controller mouse on / off</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Using it day to day</h2>
+    <div class="basics">
+      <div class="note"><h3>Switching apps</h3><p>Hold <kbd>Select</kbd> and tap <kbd>RB</kbd> to step forward or <kbd>LB</kbd> to step back. Let go of Select to open the app you picked.</p></div>
+      <div class="note"><h3>Typing</h3><p>Press <kbd>Y</kbd> to open the on-screen keyboard and click its keys with <kbd>Λ</kbd>. Press <kbd>Y</kbd> again to close it.</p></div>
+      <div class="note"><h3>Typing by voice</h3><p>Click into a text box, press <kbd>LB</kbd> + <kbd>RB</kbd> and speak. Windows types what you say. Press them again to stop.</p><p>To use another dictation app, change the shortcut next to "LB + RB sends" in the app window.</p></div>
+      <div class="note"><h3>Playing a game</h3><p>Press <kbd>Mode</kbd> or <kbd>Select</kbd> + <kbd>Start</kbd> to pause GamepadMouse so the game gets the controller. The pad buzzes to confirm.</p></div>
+      <div class="note"><h3>Dictating with OpenWhispr</h3><p>Hold <kbd>LT</kbd> + <kbd>RT</kbd> while you speak, then let go. GamepadMouse holds Ctrl+Win for you, so it works with OpenWhispr's tap mode and its push-to-talk mode.</p></div>
+      <div class="note"><h3>Changing a control</h3><p>Open the app's Controls tab and double-click a row. Pick a mouse click, any keyboard shortcut, the on-screen keyboard, app switching or nothing. Shortcuts can tap once, stay held, or repeat.</p></div>
+      <div class="note"><h3>Turbo and Clear</h3><p>These work inside the gamepad, so GamepadMouse never sees them. If a button starts repeating by itself, turbo is set on it. Use <kbd>Clear</kbd> to remove it.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Gamepad basics</h2>
+    <div class="basics">
+      <div class="note"><h3>Power on</h3><p>Press <kbd>Mode</kbd>. GamepadMouse picks the pad up within a second.</p></div>
+      <div class="note"><h3>Sleep</h3><p>The pad sleeps after 1 minute without a connection, or after 5 minutes with no buttons pressed. Press <kbd>Mode</kbd> to wake it.</p></div>
+      <div class="note"><h3>Charging</h3><p>Plug in the Type-C port on top. When connected, the active LED blinks slowly. When not connected, all 4 LEDs blink slowly. The blinking stops when it is fully charged.</p></div>
+      <div class="note"><h3>Not responding?</h3><p>Press the reset button in the small hole on the back of the pad, then press <kbd>Mode</kbd> to turn it on again.</p></div>
+    </div>
+  </section>
+</div>
