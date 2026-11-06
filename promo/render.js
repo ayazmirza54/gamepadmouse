@@ -27,7 +27,10 @@ const portrait = !!process.env.PORTRAIT; // 9:16 version // e.g. "1,5,9" -> writ
 
   const duration = await page.evaluate(() => window.DURATION);
   const total = Math.round(duration * fps);
-  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-',
+  // soundtrack.wav (from soundtrack.py) is muxed in when present
+  const wav = path.join(__dirname, 'soundtrack.wav');
+  const audio = require('fs').existsSync(wav) ? ['-i', wav, '-c:a', 'aac', '-b:a', '192k', '-shortest'] : [];
+  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-', ...audio,
     '-c:v', 'libx264', '-preset', 'slow', '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out],
     { stdio: ['pipe', 'inherit', 'inherit'] });
   for (let i = 0; i < total; i++) {
